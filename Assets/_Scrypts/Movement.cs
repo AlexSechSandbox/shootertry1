@@ -36,6 +36,18 @@ public class Movement : MonoBehaviour {
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
 	private Vector3 moveDirection = Vector3.zero;
+
+	public float Sensevity;
+	float X, Y;
+	float curX, curY;
+	float vcX, vcY;
+	public Rigidbody player;
+
+	// Use this for initialization
+	void Start () {
+		player = GetComponent<Rigidbody> ();
+	}
+
 	void Update() {
 		CharacterController controller = GetComponent<CharacterController>();
 		if (controller.isGrounded) {
@@ -48,5 +60,16 @@ public class Movement : MonoBehaviour {
 		}
 		moveDirection.y -= gravity * Time.deltaTime;
 		controller.Move(moveDirection * Time.deltaTime);
+
+		X = Input.GetAxis ("Mouse X");
+		Y = Input.GetAxis ("Mouse Y");
+
+		Y = Mathf.Clamp (Y, -90, 90);
+		X *= Sensevity;
+
+		curX = Mathf.SmoothDamp (curX, X, ref vcX, Sensevity);
+		curY = Mathf.SmoothDamp (curY, Y, ref vcY, Sensevity);
+
+		player.transform.localEulerAngles = new Vector3 (player.transform.localEulerAngles.x - Y, player.transform.localEulerAngles.y + X, 0);
 	}
 }
