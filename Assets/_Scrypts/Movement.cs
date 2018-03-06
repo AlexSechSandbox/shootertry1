@@ -43,6 +43,12 @@ public class Movement : MonoBehaviour {
 	float vcX, vcY;
 	public Rigidbody player;
 
+	//shots
+	private float nextFire;
+	public float fireRate = 10f;
+	public GameObject shot;
+	public Transform shotSpawn;
+
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<Rigidbody> ();
@@ -71,5 +77,11 @@ public class Movement : MonoBehaviour {
 		curY = Mathf.SmoothDamp (curY, Y, ref vcY, Sensevity);
 
 		player.transform.localEulerAngles = new Vector3 (player.transform.localEulerAngles.x - Y, player.transform.localEulerAngles.y + X, 0);
+
+		if (Input.GetButton("Fire1") && Time.time > nextFire)
+		{
+			nextFire = Time.time + fireRate;
+			Instantiate(shot, new Vector3 (shotSpawn.position.x + 0.5f, shotSpawn.position.y, shotSpawn.position.z + 1f), shotSpawn.rotation);
+		}
 	}
 }
